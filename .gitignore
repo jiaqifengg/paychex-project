@@ -1,0 +1,3 @@
+# ignore ALL files in ANY
+backend/env
+backend/__pycache__
