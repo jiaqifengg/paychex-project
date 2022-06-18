@@ -1,19 +1,19 @@
 # paychex-project
  
 ➢Allow user to be identified using a unique ID assigned to each employee.
-<br />o Users that cannot be identified should not be able to use the application.
+<br />&emsp;o Users that cannot be identified should not be able to use the application.
  
 ➢ Allow users to start a work shift.
-<br />o Do not allow users to start multiple shifts simultaneously.
+<br />&emsp;o Do not allow users to start multiple shifts simultaneously.
  
 ➢ Allow users to end a work shift.
-<br />o Do not allow users to start a shift during an active shift.
+<br />&emsp;o Do not allow users to start a shift during an active shift.
  
 ➢ Allow users to start/end a break, but only during an active shift.
-<br />o Do not allow employees to end a shift if a break is active.
+<br />&emsp;o Do not allow employees to end a shift if a break is active.
  
 ➢ Allow users to start/end a lunch, but only during an active shift.
-<br />o Do not allow employees to end a shift if a lunch is active.
+<br />&emsp;o Do not allow employees to end a shift if a lunch is active.
  
 ➢ All shift data performed by users should be recorded and made available upon returning to
 the application.
@@ -28,4 +28,4 @@ stated previously.
 
 ➢ (Optional) Allow administrators to view a summary report section that summarizes all the
 employee’s shift activity.
-<br />o (Optional) Allow administrators to filter the report data.
+<br />&emsp;o (Optional) Allow administrators to filter the report data.
