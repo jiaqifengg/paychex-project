@@ -15,7 +15,8 @@ class dbHelper():
                                     username VARCHAR(18) NOT NULL UNIQUE,
                                     f_name VARCHAR(25) NOT NULL,
                                     l_name VARCHAR(16) NOT NULL,
-                                    password VARCHAR(50) NOT NULL
+                                    password VARCHAR(160) NOT NULL,
+                                    salt VARCHAR(160) NOT NULL
                                 );"""
 
         self.cursor.execute(create_employees_table)
