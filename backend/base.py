@@ -3,13 +3,16 @@ from flask import Flask, render_template, render_template_string, request
 from database.dbHelper import dbHelper
 import json
 from flask import Flask, jsonify
+from flask_cors import CORS, cross_origin
 import random
 import os
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 db = dbHelper()
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     words = db.test()
     response_body = {
@@ -18,8 +21,16 @@ def index():
         "conn": words,
         "status": db.db_status
     }
-    return (response_body)  
+    response = build_response(response_body)
+    return (response)  
 
+def build_response(response_body):
+    response = jsonify(response_body)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "*")
+    response.headers.add("Access-Control-Allow-Methods", "*")
+
+    return response
 # @app.route('/test', methods=['GET'])
 # def tester():
 #     words = db.test()

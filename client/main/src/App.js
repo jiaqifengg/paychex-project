@@ -1,3 +1,4 @@
+import React from 'react';
 import './App.css';
 
 class App extends React.Component {
@@ -8,11 +9,26 @@ class App extends React.Component {
       logout: false,
       admin: false,
       emp: false,
-      working: false
+      working: false,
+      data: []
     };
   }
 
-  return()
+  componentDidMount(){
+    fetch("http://127.0.0.1:5000/")
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data);
+    })
+  }
+  
+  render(){
+    return(
+      <div>
+        test
+      </div>
+    )
+  }
 }
 
 export default App;
