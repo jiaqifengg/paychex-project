@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class Employee extends React.Component {
+export default class Login extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -18,7 +18,7 @@ export default class Employee extends React.Component {
   render(){
     return(
       <div>
-        test
+        Login Page
       </div>
     )
   }

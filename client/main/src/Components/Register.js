@@ -1,6 +1,5 @@
-import React from 'react';
-
-export default class Employee extends React.Component {
+import React from "react";
+export default class Register extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -18,7 +17,7 @@ export default class Employee extends React.Component {
   render(){
     return(
       <div>
-        test
+        Register Page
       </div>
     )
   }
