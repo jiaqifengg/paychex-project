@@ -39,6 +39,9 @@ class dbHelper():
                                     in_date DATE NOT NULL,
                                     clock_in_time TIME,
                                     clock_out_time TIME,
+                                    total_work_time TEXT,
+                                    total_lunch_time TEXT,
+                                    total_break_time TEXT,
                                     PRIMARY KEY(id)
                                 );"""
                                 
