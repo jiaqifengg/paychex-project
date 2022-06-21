@@ -4,7 +4,7 @@
     align-items: center;
 }
 
-#landingContent{
+#landingContent, #registerContent{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -13,7 +13,7 @@
     min-height: 50vh;
 }
 
-#portalTitle{
+#portalTitle, #registerTitle{
     font-size: 72px;
     background: -webkit-linear-gradient(-70deg, #F9957F
     10%, #F2F5D0
