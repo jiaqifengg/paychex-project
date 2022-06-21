@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import './styles/standard.css';
 import Login from "./Components/Login.js"
 import Register from "./Components/Register.js"
 import Landing from "./Components/Landing.js"
@@ -65,9 +66,7 @@ const Home = (props) => {
   if(!sessionStorage.getItem("token") || props.login === false){
     // if the user is not logged in, show the login form.  Otherwise, show the post form
     return(
-      <div>
-        <Landing></Landing>
-      </div>
+      <Landing></Landing>
     )
   }else{
     if(sessionStorage.getItem("admin") === 1){

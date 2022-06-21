@@ -1,0 +1,59 @@
+.maincontent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#landingContent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 50vw;
+    min-height: 50vh;
+}
+
+#portalTitle{
+    font-size: 72px;
+    background: -webkit-linear-gradient(-70deg, #F9957F
+    10%, #F2F5D0
+    );
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#login-btn{
+    width: 15vw;
+    height: 8vh;
+    background-color: #CCCCFF;
+    box-shadow: 0 10px 0 #7c83bc;
+    border-color: transparent;
+    border-radius: 0.5vw;
+    margin: 1vw;
+    font-size: large;
+    color: white;
+    font-weight: bold;
+}
+
+#login-btn:active{
+    box-shadow: none;
+    transform: translateY(10px);
+}
+
+#register-btn{
+    width: 15vw;
+    height: 8vh;
+    border-color: transparent;
+    background-color: #81b1de;
+    box-shadow: 0 10px 0 #6da4d9;
+    border-radius: 0.5vw;
+    margin: 1vw;
+    color: white;
+    font-size: large;
+    font-weight: bold;
+}
+
+#register-btn:active{
+    box-shadow: none;
+    transform: translateY(10px);
+}
