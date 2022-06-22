@@ -63,3 +63,15 @@ class dbHelper():
 
     def test(self):
         return "testing connection"
+
+    def __execute(self, query, parameters=[]):
+        try:
+            with self.connection:
+                cursor = self.connection.cursor()
+                cursor.execute(query, parameters)
+                return 200
+        except:
+            return 500
+
+    def register(self, emp_id, username, f_name, l_name, hash_pw, salt, emp_type):
+        query = "INSERT INTO employees(emp_id, username, f_name, l_name, hash_pw, salt, emp_type) VALUES (%s, %s, %s, %s, %s, %s, %d)"

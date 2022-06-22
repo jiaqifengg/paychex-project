@@ -26,7 +26,6 @@ export default class Register extends React.Component {
     this.setState({
       [e.target.name]: e.target.value
     });
-    console.log(this.state);
   }
 
   onSubmit = e =>{
@@ -43,11 +42,31 @@ export default class Register extends React.Component {
           missingField: true
         })
       }else{
-        console.log("Successfully registered!");
-        
+        console.log("Successfully registered! Attempting to post...");
+        fetch("http://localhost:5000/register", {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            firstName: this.state.firstname,
+            lastName: this.state.lastname,
+            username: this.state.username,
+            password: this.state.password,
+            empType: 0
+          })
+        })
+        .then(response=>response.json())
+        .then(data=>{ console.log(data); })
+
+        this.setState({
+          firstname: "",
+          lastname: "",
+          username: "",
+          password: "",
+          showCriteria: false,
+          missingField: false
+        })
       }
     }
-    console.log(this.state);
   }
 
   strongPassword(){

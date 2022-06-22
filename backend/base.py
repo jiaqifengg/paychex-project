@@ -6,11 +6,19 @@ from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
 import random
 import os
+import uuid
 
 app = Flask(__name__)
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app)
 db = dbHelper()
+
+def build_response(response_body):
+    response = jsonify(response_body)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "*")
+    response.headers.add("Access-Control-Allow-Methods", "*")
+
+    return response
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -24,22 +32,32 @@ def index():
     response = build_response(response_body)
     return (response)  
 
-def build_response(response_body):
-    response = jsonify(response_body)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Allow-Headers", "*")
-    response.headers.add("Access-Control-Allow-Methods", "*")
+@app.route('/register', methods=['POST', 'GET'])
+def tester():
+    print("Testing register!")
+    emp_id = generateUUID()
+    post_data = json.loads(request.data)
 
-    return response
-# @app.route('/test', methods=['GET'])
-# def tester():
-#     words = db.test()
-#     response_body = {
-#         "name": "Kelly",
-#         "about" :"Second Test",
-#         "conn": words
-#     }
-#     return (response_body)  
+    firstName = post_data['firstName']
+    lastName = post_data['lastName']
+    username = post_data['username']
+    password = post_data['password']
+    empType = post_data['empType']
+    response_body = {
+        "msg": 200,
+        "emp_id": emp_id,
+        "firstName": firstName,
+        "lastName": lastName,
+        "username": username,
+        "passWord": password,
+        "empType": empType
+    }
+    print(response_body)
+    response = build_response(response_body)
+    return (response)  
+
+def generateUUID():
+    return uuid.uuid4().hex[:10]
 
 # @app.route('/register', methods=['POST', 'GET'])
 # def register():
