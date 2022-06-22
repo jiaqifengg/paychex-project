@@ -79,7 +79,7 @@ def login():
     password = post_data['password']
     res = db.login(username)
     print(res)
-    if res != 500:
+    if res != 500 and len(res) != 0:
         result = res[0]
         emp_id = result[0]
         res_username = result[1]
@@ -87,20 +87,33 @@ def login():
         lastName = result[3]
         hashed_pw = result[4]
         pw_check = check_password(password, hashed_pw)
+        if(pw_check):
+            response_body = {
+                "status": 200,
+                "pw_check": pw_check,
+                "emp_id": emp_id,
+                "username": res_username,
+                "firstName": firstName,
+                "lastName": lastName
+            }
 
-        response_body = {
-            "status": 200,
-            "pw_check": pw_check,
-            "emp_id": emp_id,
-            "username": res_username,
-            "firstName": firstName,
-            "lastName": lastName
-        }
+            response = build_response(response_body)
+            return response
+        else:
+            response_body = {
+                "status": 500,
+                "username": res_username,
+            }
 
-        response = build_response(response_body)
-        return response
+            response = build_response(response_body)
+            return response
+
     else:
-        response = build_response(invalid_response)
+        response_body = {
+            "status": 500,
+            "username": username,
+        }
+        response = build_response(response_body)
         return response
 
 #https://stackoverflow.com/questions/9594125/salt-and-hash-a-password-in-python

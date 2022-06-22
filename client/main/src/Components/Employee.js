@@ -4,6 +4,7 @@ export default class Employee extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      shiftActive: false
     };
   }
 
@@ -18,7 +19,7 @@ export default class Employee extends React.Component {
   render(){
     return(
       <div>
-        test
+        Employee portal
       </div>
     )
   }

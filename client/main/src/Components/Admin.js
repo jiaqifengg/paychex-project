@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 
 export default class Admin extends React.Component {
   constructor(props){
@@ -19,7 +18,7 @@ export default class Admin extends React.Component {
   render(){
     return(
       <div>
-        test
+        Admin
       </div>
     )
   }
