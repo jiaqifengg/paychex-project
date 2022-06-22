@@ -1,4 +1,4 @@
-import hashlib
+import bcrypt
 from flask import Flask, render_template, render_template_string, request
 from database.dbHelper import dbHelper
 import json
@@ -12,6 +12,9 @@ app = Flask(__name__)
 CORS(app)
 db = dbHelper()
 
+def generateUUID():
+    return uuid.uuid4().hex[:10]
+    
 def build_response(response_body):
     response = jsonify(response_body)
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -24,7 +27,7 @@ def build_response(response_body):
 def index():
     words = db.test()
     response_body = {
-        "name": "Kelly",
+        "name": "Kelly's Paychex app",
         "about" :"Hello! I'm a full stack developer that loves python and javascript",
         "conn": words,
         "status": db.db_status
@@ -43,6 +46,8 @@ def tester():
     username = post_data['username']
     password = post_data['password']
     empType = post_data['empType']
+    hash_pw = password_hasher(password)
+    print(hash_pw)
     response_body = {
         "msg": 200,
         "emp_id": emp_id,
@@ -50,14 +55,22 @@ def tester():
         "lastName": lastName,
         "username": username,
         "passWord": password,
-        "empType": empType
+        "empType": empType,
+        "hashed_pw": hash_pw.decode('utf-8')
     }
     print(response_body)
     response = build_response(response_body)
     return (response)  
 
-def generateUUID():
-    return uuid.uuid4().hex[:10]
+#https://stackoverflow.com/questions/9594125/salt-and-hash-a-password-in-python
+def password_hasher(password):
+    # Hash a password for the first time
+    # (Using bcrypt, the salt is saved into the hash itself)
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+def check_password(plain_text_password, hashed_password):
+    # Check hashed password. Using bcrypt, the salt is saved into the hash itself
+    return bcrypt.checkpw(plain_text_password, hashed_password)
 
 # @app.route('/register', methods=['POST', 'GET'])
 # def register():
