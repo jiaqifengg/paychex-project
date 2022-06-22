@@ -47,14 +47,14 @@ def tester():
     password = post_data['password']
     empType = post_data['empType']
     hash_pw = password_hasher(password)
-    print(hash_pw)
+    status = db.register((emp_id, username, firstName, lastName, hash_pw, empType))
+
     response_body = {
-        "msg": 200,
+        "msg": status,
         "emp_id": emp_id,
         "firstName": firstName,
         "lastName": lastName,
         "username": username,
-        "passWord": password,
         "empType": empType,
         "hashed_pw": hash_pw.decode('utf-8')
     }

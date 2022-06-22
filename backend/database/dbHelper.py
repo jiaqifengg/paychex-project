@@ -1,3 +1,4 @@
+from re import U
 import psycopg2
 import hashlib
 from dotenv import load_dotenv
@@ -24,7 +25,6 @@ class dbHelper():
                                     f_name VARCHAR(25) NOT NULL,
                                     l_name VARCHAR(16) NOT NULL,
                                     hash_pw VARCHAR(160) NOT NULL,
-                                    salt VARCHAR(160) NOT NULL,
                                     emp_type INT NOT NULL,
                                     PRIMARY KEY(emp_id)
                                 );"""
@@ -64,14 +64,15 @@ class dbHelper():
     def test(self):
         return "testing connection"
 
-    def __execute(self, query, parameters=[]):
+    def __execute(self, query, parameters):
         try:
-            with self.connection:
-                cursor = self.connection.cursor()
-                cursor.execute(query, parameters)
-                return 200
+            self.cursor.execute(query, parameters)
+            self.connection.commit()
+            return 200
         except:
             return 500
 
-    def register(self, emp_id, username, f_name, l_name, hash_pw, salt, emp_type):
-        query = "INSERT INTO employees(emp_id, username, f_name, l_name, hash_pw, salt, emp_type) VALUES (%s, %s, %s, %s, %s, %s, %d)"
+    def register(self, emp_details):
+        query = """INSERT INTO employees(emp_id, username, f_name, l_name, hash_pw, emp_type) 
+        VALUES (%s, %s, %s, %s, %s, %s)"""
+        return self.__execute(query, emp_details)
