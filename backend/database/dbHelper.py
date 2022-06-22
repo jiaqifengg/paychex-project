@@ -68,11 +68,24 @@ class dbHelper():
         try:
             self.cursor.execute(query, parameters)
             self.connection.commit()
-            return 200
+            return self.cursor
         except:
             return 500
 
     def register(self, emp_details):
         query = """INSERT INTO employees(emp_id, username, f_name, l_name, hash_pw, emp_type) 
         VALUES (%s, %s, %s, %s, %s, %s)"""
-        return self.__execute(query, emp_details)
+        cursor = self.__execute(query, emp_details)
+        if cursor != 500:
+            return 200
+        else:
+            return cursor
+
+    def login(self, username):
+        query = """SELECT * FROM employees WHERE username=%s"""
+        vals = (username,)
+        cursor = self.__execute(query, vals)
+        if cursor != 500:
+            return cursor.fetchall()
+        else:
+            return cursor 

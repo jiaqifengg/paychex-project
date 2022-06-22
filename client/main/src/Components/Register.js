@@ -70,7 +70,6 @@ export default class Register extends React.Component {
   }
 
   strongPassword(){
-    console.log(this.state.password);
     var loweCases = /[a-z]/g;
     var upperCases = /[A-Z]/g;
     var numbers = /[0-9]/g;
