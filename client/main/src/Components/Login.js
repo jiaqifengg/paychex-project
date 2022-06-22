@@ -72,7 +72,7 @@ export default class Login extends React.Component {
   render(){
     return(
       <div id="loginContent">
-        <h1 id="registerTitle">Login</h1>
+        <h1 id="loginTitle">Login</h1>
         {this.state.missingField && <div><h3>All fields must be filled!</h3></div>}
         {this.state.error && <div><h3>Incorrect username or password</h3></div>}
         <div id="loginForm">

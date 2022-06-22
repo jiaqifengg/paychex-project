@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "../styles/standard.css";
 export default class Admin extends React.Component {
   constructor(props){
     super(props);

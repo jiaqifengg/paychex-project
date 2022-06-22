@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "../styles/standard.css";
 export default class Employee extends React.Component {
   constructor(props){
     super(props);
@@ -18,8 +18,16 @@ export default class Employee extends React.Component {
   
   render(){
     return(
-      <div>
-        Employee portal
+      <div id="employeePortal">
+        <div id="sideNav">
+          Employee portal
+          <a href="#">Paycheck</a>
+          <br></br>
+          <a href="#">Timesheet</a>
+        </div>
+        <div id="portalContent">
+
+        </div>
       </div>
     )
   }
