@@ -1,4 +1,5 @@
 import React from "react";
+
 export default class Register extends React.Component {
   constructor(props){
     super(props);
@@ -7,8 +8,10 @@ export default class Register extends React.Component {
       lastname: "",
       username: "",
       password: "",
-      showCriteria: false
+      showCriteria: false,
+      missingField: false
     };
+    this.strongPassword = this.strongPassword.bind(this);
   }
 
   componentDidMount(){
@@ -18,11 +21,41 @@ export default class Register extends React.Component {
     //     console.log(data);
     // })
   }
+
+  changeHandler(e){
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+    console.log(this.state);
+  }
+
+  onSubmit = e =>{
+    e.preventDefault();
+    let res = this.strongPassword();
+    if(res === -1){
+      this.setState({
+        showCriteria: true
+      })
+    }else{
+      if(this.state.firstname.length === 0 || this.state.lastname.length === 0 || this.state.username === 0){
+        console.log("Missing field");
+        this.setState({
+          missingField: true
+        })
+      }else{
+        console.log("Successfully registered!");
+        
+      }
+    }
+    console.log(this.state);
+  }
+
   strongPassword(){
     console.log(this.state.password);
     var loweCases = /[a-z]/g;
     var upperCases = /[A-Z]/g;
     var numbers = /[0-9]/g;
+    // eslint-disable-next-line
     var special = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/g;
     
     if(this.state.password.length < 8){
@@ -46,39 +79,34 @@ export default class Register extends React.Component {
     return 0;
   }
 
-  changeHandler(e){
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-    console.log(this.state);
-  }
-
-  onSubmit = e =>{
-    e.preventDefault();
-    let res = this.strongPassword();
-    if(res === -1){
-      this.setState({
-        showCriteria: true
-      })
-    }else{
-      console.log("Successfully registered!");
-    }
-    console.log(this.state);
-  }
-
   render(){
     return(
       <div id="registerContent">
         <h1 id="registerTitle">Register</h1>
+        {this.state.missingField && <div><h2>All fields must be filled!</h2></div>}
         <div id="registerForm">
           <form>
-            <div id="fullName">
-              <input name="firstname" placeholder="First Name" value={this.state.firstname} onChange={e => this.changeHandler(e)} required></input>
-              <input name="lastname" placeholder="Last Name" value={this.state.lastname} onChange={e => this.changeHandler(e)} required></input>
+            <div id="f_name">
+              <label className="register-labels">First Name<span style={{ color: 'red'}}>*</span></label>
+              <br></br>
+              <input name="firstname" placeholder="First Name" value={this.state.firstname} onChange={e => this.changeHandler(e)} type="text" required="required"></input>
             </div>
-            <input id="username" name="username" placeholder="Username" value={this.state.username} onChange={e => this.changeHandler(e)} required></input>
-            <input id="password" name="password" type="password" placeholder="Password" value={this.state.password} onChange={e => this.changeHandler(e)} required></input>
-            <button onClick={e => this.onSubmit(e)}>Register</button>
+            <div id="l_name">
+              <label className="register-labels">Last Name<span style={{ color: 'red'}}>*</span></label>
+              <br></br>
+              <input name="lastname" placeholder="Last Name" value={this.state.lastname} onChange={e => this.changeHandler(e)} type="text" required="required"></input>
+            </div>
+            <div id="user">
+              <label className="register-labels">Username<span style={{ color: 'red'}}>*</span></label>
+              <br></br>
+              <input id="username" name="username" placeholder="Username" value={this.state.username} onChange={e => this.changeHandler(e)} type="text" required="required"></input>
+            </div>
+            <div id="passWord">
+              <label className="register-labels">Password<span style={{ color: 'red'}}>*</span></label>
+              <br></br>
+              <input id="password" name="password" type="password" placeholder="Password" value={this.state.password} onChange={e => this.changeHandler(e)} required="required"></input>
+            </div>
+            <button onClick={e => this.onSubmit(e)} type="submit">Register</button>
           </form>
           {this.state.showCriteria &&
             <div id="password-criteria">
@@ -95,8 +123,4 @@ export default class Register extends React.Component {
       </div>
     )
   }
-}
-
-function strongPassword(password){
-
 }
