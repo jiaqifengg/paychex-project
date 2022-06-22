@@ -20,13 +20,12 @@ export default class Employee extends React.Component {
     return(
       <div id="employeePortal">
         <div id="sideNav">
-          Employee portal
-          <a href="#">Paycheck</a>
-          <br></br>
-          <a href="#">Timesheet</a>
+          <div>Employee portal</div>
+          <div>Paycheck</div>
+          <div>Timesheet</div>
         </div>
         <div id="portalContent">
-
+          <button>Clock In</button>
         </div>
       </div>
     )
