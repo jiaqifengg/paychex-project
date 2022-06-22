@@ -59,17 +59,13 @@ const EmpTest = (props) =>{
 
 const SignIn = (props) =>{
   return(
-    <div>
-      <Login login={props.login}></Login>
-    </div>
+    <Login login={props.login}></Login>
   )
 }
 
 const SignUp = (props) => {
   return(
-    <div>
-      <Register></Register>
-    </div>
+    <Register></Register>
   )
 }
 

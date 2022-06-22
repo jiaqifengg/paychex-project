@@ -1,3 +1,4 @@
+from curses import meta
 from tabnanny import check
 from urllib import response
 import bcrypt
@@ -125,6 +126,16 @@ def password_hasher(password):
 def check_password(input_password, hashed_password):
     # Check hashed password. Using bcrypt, the salt is saved into the hash itself
     return bcrypt.checkpw(input_password.encode(), hashed_password.encode())
+
+@app.route('/in', methods=['POST', 'GET'])
+def clock_in():
+    post_data = json.loads(request.data)
+    username = post_data['username']
+    
+@app.route('/status', methods=['POST','GET'])
+def get_active():
+    post_data = json.loads(request.data)
+    token = post_data['token'] #emp_id is passed
 
 if __name__ == "__main__":
     app.debug = True

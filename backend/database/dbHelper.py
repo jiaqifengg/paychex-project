@@ -17,7 +17,6 @@ class dbHelper():
         except:
             self.db_status = 500
 
-
     def init_tables(self):
         create_employees_table = """CREATE TABLE IF NOT EXISTS employees(
                                     emp_id CHAR(10),
@@ -88,4 +87,27 @@ class dbHelper():
         if cursor != 500:
             return cursor.fetchall()
         else:
-            return cursor 
+            return cursor
+    
+    def get_current_status(self, emp_id):
+        query = "SELECT * FROM timesheets WHERE emp_id=%s AND clock_out_time is NULL"
+
+    def clockIn(self, emp_id):
+        query = "INSERT INTO timesheets"
+
+    def clockOut(self, emp_id):
+        query = """
+        UPDATE timesheets
+        SET active=0, clock_out_time=?, total_work_time=?, total_lunch_time=?, total_break_time=?
+        WHERE emp_id=%s;
+        """
+        
+    def get_timesheets(self, username):
+        query = """SELECT * FROM employees WHERE username=%s"""
+        vals = (username,)
+        cursor = self.__execute(query, vals)
+        if cursor != 500:
+            return cursor.fetchall()
+        else:
+            return cursor
+
