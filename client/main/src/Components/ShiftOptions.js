@@ -5,14 +5,20 @@ export default class ShiftOptions extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-
+      breakType: "",
+      breakStatus: -1
     };
     this.clockIn = this.clockIn.bind(this);
+    this.clockOut = this.clockOut.bind(this);
+    this.breakStart = this.breakStart.bind(this);
+    this.breakEnd = this.breakEnd.bind(this);
   }
 
   componentDidMount(){
-    console.log("shiftID => " + sessionStorage.getItem("shiftID"));
-    console.log("breakID => " + sessionStorage.getItem("breakID"));
+    this.setState({
+      breakType: sessionStorage.getItem("breakType"),
+      breakStatus: sessionStorage.getItem("breakID")
+    })
   }
 
   clockIn = e =>{
@@ -79,15 +85,15 @@ export default class ShiftOptions extends React.Component {
             console.log(data);
             sessionStorage.setItem("breakID", data["breakID"]);
             sessionStorage.setItem("breakType", data["breakType"]);
-            this.props.updateShift(true);
+            this.props.updateBreak(true);
         })
     }
   }
 
   breakEnd = e =>{
     e.preventDefault()
-    let breakT = e.target.id;
-    console.log(breakT);  
+    console.log("ending break...")
+    console.log(sessionStorage.getItem("breakType"))
     if(this.props.shiftStatus){
         fetch("http://localhost:5000/breakEnd", {
             method: 'POST',
@@ -102,35 +108,32 @@ export default class ShiftOptions extends React.Component {
         .then(response=>response.json())
         .then(data=>{ 
             console.log(data);
-            sessionStorage.setItem("breakID", data["breakID"]);
-            sessionStorage.setItem("breakType", data["breakType"]);
-            this.props.updateShift(true);
+            sessionStorage.setItem("breakID", "-1");
+            sessionStorage.setItem("breakType", "");
+            this.props.updateBreak(false);
         })
     }
   }
 
   render(){
-    function breaks(){
-        if(sessionStorage.getItem("breakType") === "lunch"){
-            return <button onClick={e => this.breakEnd(e)}>End Lunch</button>
-        }else if((sessionStorage.getItem("breakType") === "break")){
-            return <button onClick={e => this.breakEnd(e)}>End Break</button>
-        }
-    }
-
     return(
       <div id="shiftOptions">
-        {sessionStorage.getItem("shiftID") === "-1" ?
-            <button onClick={e => this.clockIn(e)}>Clock-In</button> :
-            <button onClick={e => this.clockOut(e)}>Clock-Out</button>
+        {sessionStorage.getItem("shiftID") === "-1" &&
+            <button onClick={e => this.clockIn(e)}>Clock-In</button> 
         }
+        {sessionStorage.getItem("shiftID") !== "-1" && sessionStorage.getItem("breakID") === "-1" 
+        && <button onClick={e => this.clockOut(e)}>Clock-Out</button>}
+
         {sessionStorage.getItem("shiftID") !== "-1" && sessionStorage.getItem("breakID") === "-1" &&
             <div>
                 <button id="break" onClick={e => this.breakStart(e)}>Start Break</button>
                 <button id="lunch" onClick={e => this.breakStart(e)}>Start Lunch</button>
             </div>
         }
-        {sessionStorage.getItem("breakID") !== "-1" && breaks()}
+        {sessionStorage.getItem("breakID") !== "-1" && sessionStorage.getItem("breakType") === "lunch" 
+        && <button id="lunch" onClick={e => this.breakEnd(e)}>End Lunch</button>}
+        {sessionStorage.getItem("breakID") !== "-1" && sessionStorage.getItem("breakType") === "break" && 
+        <button id="lunch" onClick={e => this.breakEnd(e)}>End Break</button>}
       </div>
     )
   }

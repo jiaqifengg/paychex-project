@@ -128,22 +128,24 @@ class dbHelper():
         
     def clockOut(self, emp_id, shiftID):
         clock_out_time = datetime.now()
-        res = self.total_work_time(shiftID, clock_out_time)
+        res = self.get_shift(shiftID)
+        res = self.time_diff(clock_out_time, "timesheet", res)
         query = """
         UPDATE timesheets
-        SET active=0, clock_out_time=%s, total_work_time=%s, total_lunch_time=%s, total_break_time=%s
+        SET active=0, clock_out_time=%s, total_work_time=%s
         WHERE id=%s;
         """
-        vals=(clock_out_time, res, 0, 0, shiftID)
+        vals=(clock_out_time, res, shiftID)
         res = self.__execute(query, vals)
         if res != 500:
             return 200
         else:
             return res
     
-    def total_work_time(self, shiftID, curr_time):
-        res = self.get_shift(shiftID)
-        start_time = res[0][4]
+    def time_diff(self, curr_time, table, res):
+        i = 4
+        if table == "break": i = 3
+        start_time = res[0][i]
         time_diff = curr_time - start_time
         return time_diff
 
@@ -157,6 +159,12 @@ class dbHelper():
     def get_shift(self, shiftID):
         query = "SELECT * FROM timesheets WHERE id=%s"
         vals = (shiftID,)
+        res = self.__execute(query, vals)
+        return res.fetchall()
+    
+    def get_break(self, breakID):
+        query = "SELECT * FROM breaks WHERE break_id=%s"
+        vals = (breakID,)
         res = self.__execute(query, vals)
         return res.fetchall()
     
@@ -177,10 +185,36 @@ class dbHelper():
         else:
             return cursor
 
+    def end_break(self, breakID):
+        res = self.get_break(breakID)
+        end_break_time = datetime.now()
+        total_break_time = self.time_diff(end_break_time, "break", res)
+        print(end_break_time)
+        print(total_break_time)
+        query = """
+                UPDATE breaks
+                SET break_end=%s, break_time=%s
+                WHERE break_id=%s;
+                """
+        vals = (end_break_time, total_break_time, breakID)
+        res = self.__execute(query, vals)
+        if res != 500:
+            return 200
+        else:
+            return res
+
     def count_update_breaks(self, shiftID, breakType):
+        print(breakType + " 2")
         shift_dets = self.get_shift(shiftID)[0]
-        total_breaks = int(shift_dets[8])
-        total_lunch = int(shift_dets[7])
+        total_breaks = shift_dets[8]
+        total_lunch = shift_dets[7]
+        total_breaks = 0 if total_breaks == None else int(total_breaks)
+        total_lunch = 0 if total_lunch == None else int(total_lunch)
+        print(breakType + " 3")
+        print(total_breaks, total_lunch)
+        print(breakType + " 4")
+        query = """"""
+        vals = ()
         if breakType == "break":
             query = """
                     UPDATE timesheets
@@ -188,12 +222,20 @@ class dbHelper():
                     WHERE id=%s;
                     """
             vals = (str(total_breaks + 1), shiftID)
+            print(breakType + " 5")
         elif breakType == "lunch":
             query = """
                     UPDATE timesheets
-                    SET total_break_time=%s
+                    SET total_lunch_time=%s
                     WHERE id=%s;
                     """
             vals = (str(total_lunch + 1), shiftID)
+            print(breakType + " 6")
+        
+        res = self.__execute(query, vals)
+        if res != 500:
+            return 200
+        else:
+            return res
         
         

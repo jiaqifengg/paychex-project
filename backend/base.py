@@ -206,11 +206,25 @@ def start_break():
 
 @app.route('/breakEnd', methods=['GET', 'POST'])
 def end_break():
+    print("hereeee")
     post_data = json.loads(request.data)
     breakType = post_data['breakType']
     shiftID = post_data['shiftID']
     emp_id = post_data['token']
     breakID = post_data["breakID"]
+    res = db.end_break(breakID)
+    print(breakType + " 1")
+    update_res = db.count_update_breaks(shiftID, breakType)
+    response_body = {
+        "status": 200,
+        "breakType": breakType,
+        "breakID": breakID,
+        "shiftID": shiftID,
+        "emp_id": emp_id,
+        "total": res,
+    }
+    response = build_response(response_body)
+    return response
 
 
 if __name__ == "__main__":
