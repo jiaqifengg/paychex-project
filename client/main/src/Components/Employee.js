@@ -2,7 +2,6 @@ import React from 'react';
 import "../styles/standard.css";
 import Logout from "../icons/logout.png";
 import ShiftManagement from "./ShiftOptions.js";
-import Timesheet from './Timesheet';
 
 export default class Employee extends React.Component {
   constructor(props){
@@ -53,7 +52,7 @@ export default class Employee extends React.Component {
   render(){
     const styles = {
       display: this.state.timesheetItem ? {border: '1px solid white'} : {border: '1px solid transparent'},
-      shift: this.state.shiftActive ? {color: 'green'} : {color: 'white'},
+      shift: this.state.shiftActive ? {color: '#99CD38'} : {color: 'white'},
     }
 
     const status = {
@@ -86,7 +85,6 @@ export default class Employee extends React.Component {
         <div id="portalContent">
           <ShiftManagement shiftStatus={this.state.shiftActive} updateShift={this.updateShiftActive}
            updateBreak={this.updateBreakActive}></ShiftManagement>
-           <Timesheet></Timesheet>
         </div>
       </div>
     )

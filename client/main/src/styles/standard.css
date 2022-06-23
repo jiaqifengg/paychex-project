@@ -58,22 +58,68 @@
     transform: translateY(10px);
 }
 
+#loginForm, #registerForm{
+    color: white;
+}
+
+#login_register{
+    color: white;
+    margin-top: 1vh;
+}
+
+#login_register a{
+    color:#6da4d9;
+}
+
+#login_register a:visited{
+    color:#6da4d9;
+}
+
+#loginForm div, #registerForm div{
+    height: 10vh;
+}
+
+#loginForm input, #registerForm input{
+    height: 3vh;
+    border-radius: 0.2vw;
+    box-shadow: none;
+}
+
+#signupIn-btn{
+    width: 13.3vw;
+    height: 4vh;
+    border-radius: 1vw;
+    color: white;
+    background-color: #5CB85C;
+    border: 2px solid #5CB85C;
+}
+
+#signupIn-btn:hover{
+    cursor: pointer;
+    background-color: #468d46;
+    border: 2px solid #468d46;
+}
+
 /* CSS for admin and employee portal navbar */
 #employeePortal{
     display: flex;
     flex-direction: row;
-    height: 100vh;
+    height: 100%;
+    justify-content: flex-start;
 }
 
 #sideNav{
+    position: fixed;
     display: flex;
     padding-top: 5vh;
     /* justify-content: center; */
     flex-direction: column;
     align-items: center;
+    height: 100vh;
     min-width: 20vw;
     max-width: 20vw;
     background-color: #2f363e;
+    overflow: auto;
 }
 
 .logout-btn{
@@ -126,13 +172,70 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 100vw;
+    margin-left: 20vw;
 }
 
+/* CSS for timesheet table */
 .row{
     padding-right: 4vw;
 }
 
 #breaks-table{
     padding-left: 3.5vw;
+}
+
+/* CSS for shift options */
+#shiftContent{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#shiftOptions{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    min-height: 40%;
+    align-items: center;
+}
+
+.shiftButtons button{
+    height: 8vh;
+    width: 15vw;
+    margin: 1vw;
+    border-radius: 1vw;
+    box-shadow: none;
+    border: none;
+}
+
+#clockIn-btn{
+    background-color: #99CD38;
+}
+#clockIn-btn:hover{
+    background-color: #83af30;
+}
+
+#clockOut-btn{
+    background-color: #00ABEF;
+}
+
+#clockOut-btn:hover{
+    background-color: #0186bb;
+}
+
+button#break.breakStart, button#break.breakEnd{
+    background-color: #F9AF57;
+}
+
+button#break.breakStart:hover, button#break.breakEnd:hover{
+    background-color: #F7941F;
+}
+
+button#lunch.breakStart, button#lunch.breakEnd{
+    background-color: #FBD554;
+}
+
+button#lunch.breakStart:hover, button#lunch.breakEnd:hover{
+    background-color: #d4b348;
 }

@@ -124,10 +124,11 @@ export default class Register extends React.Component {
               <br></br>
               <input id="password" name="password" type="password" placeholder="Password" value={this.state.password} onChange={e => this.changeHandler(e)} required="required"></input>
             </div>
-            <button onClick={e => this.onSubmit(e)} type="submit">Register</button>
+            <button onClick={e => this.onSubmit(e)} type="submit" id="signupIn-btn">Register</button>
           </form>
           {this.state.showCriteria &&
             <div id="password-criteria">
+              <p>Password Criteria:</p>
               <ul>
                 <li>MUST contain at least 8 characters.</li>
                 <li>MUST contain at least one UPPERCASE letter.</li>
@@ -137,6 +138,9 @@ export default class Register extends React.Component {
               </ul>
             </div>
           }
+          <div id="login_register">
+            Have an account? <a href="/login">Sign In</a>
+          </div>
         </div>
       </div>
     )

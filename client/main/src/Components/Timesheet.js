@@ -10,20 +10,7 @@ export default class Timesheet extends React.Component {
   }
 
   componentDidMount(){
-    fetch("http://localhost:5000/timesheet", {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        token: sessionStorage.getItem("token")
-      })
-    })
-    .then(response=>response.json())
-    .then(data=>{ 
-      let res_data = JSON.parse(data["res"]);
-      this.setState({
-        data: res_data
-      })
-    })
+ 
   }
   
   render(){
@@ -39,7 +26,7 @@ export default class Timesheet extends React.Component {
             <th className='row'>Total Breaks</th>
           </tr>
           <tbody>
-            {this.state.data.reverse().map((val, key) => {
+            {this.props.data.reverse().map((val, key) => {
               return(
                 <tr key={key}>
                   <td className='row'>{val.date}</td>

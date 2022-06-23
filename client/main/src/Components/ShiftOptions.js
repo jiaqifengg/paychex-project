@@ -1,17 +1,36 @@
 import React from 'react';
 import "../styles/standard.css";
-
+import Timesheet from './Timesheet';
 export default class ShiftOptions extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       breakType: "",
-      breakStatus: -1
+      breakStatus: -1,
+      data: []
     };
     this.clockIn = this.clockIn.bind(this);
     this.clockOut = this.clockOut.bind(this);
     this.breakStart = this.breakStart.bind(this);
     this.breakEnd = this.breakEnd.bind(this);
+    this.refreshTimesheet = this.refreshTimesheet.bind(this);
+  }
+
+  refreshTimesheet(){
+    fetch("http://localhost:5000/timesheet", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        token: sessionStorage.getItem("token")
+      })
+    })
+    .then(response=>response.json())
+    .then(data=>{ 
+      let res_data = JSON.parse(data["res"]);
+      this.setState({
+        data: res_data
+      })
+    })
   }
 
   componentDidMount(){
@@ -19,6 +38,7 @@ export default class ShiftOptions extends React.Component {
       breakType: sessionStorage.getItem("breakType"),
       breakStatus: sessionStorage.getItem("breakID")
     })
+    this.refreshTimesheet();
   }
 
   clockIn = e =>{
@@ -37,6 +57,7 @@ export default class ShiftOptions extends React.Component {
             console.log(data);
             sessionStorage.setItem("shiftID", data["shiftID"]);
             this.props.updateShift(true);
+            this.refreshTimesheet();
         })
     }
   }
@@ -62,6 +83,7 @@ export default class ShiftOptions extends React.Component {
             console.log(data);
             sessionStorage.setItem("shiftID", "-1");
             this.props.updateShift(false);
+            this.refreshTimesheet();
         })
     }
   }
@@ -86,6 +108,7 @@ export default class ShiftOptions extends React.Component {
             sessionStorage.setItem("breakID", data["breakID"]);
             sessionStorage.setItem("breakType", data["breakType"]);
             this.props.updateBreak(true);
+            this.refreshTimesheet();
         })
     }
   }
@@ -111,29 +134,46 @@ export default class ShiftOptions extends React.Component {
             sessionStorage.setItem("breakID", "-1");
             sessionStorage.setItem("breakType", "");
             this.props.updateBreak(false);
+            this.refreshTimesheet();
         })
     }
   }
 
   render(){
     return(
-      <div id="shiftOptions">
-        {sessionStorage.getItem("shiftID") === "-1" &&
-            <button onClick={e => this.clockIn(e)}>Clock-In</button> 
-        }
-        {sessionStorage.getItem("shiftID") !== "-1" && sessionStorage.getItem("breakID") === "-1" 
-        && <button onClick={e => this.clockOut(e)}>Clock-Out</button>}
+      <div id="shiftContent">
+        <div id="shiftOptions">
+          {sessionStorage.getItem("shiftID") === "-1" &&
+          <div className='shiftButtons'>
+              <button id="clockIn-btn" onClick={e => this.clockIn(e)}>Clock-In</button> 
+          </div>
+          }
+          {sessionStorage.getItem("shiftID") !== "-1" && sessionStorage.getItem("breakID") === "-1" 
+          && <div className='shiftButtons'>
+              <button id="clockOut-btn" onClick={e => this.clockOut(e)}>Clock-Out</button>
+            </div>}
 
-        {sessionStorage.getItem("shiftID") !== "-1" && sessionStorage.getItem("breakID") === "-1" &&
-            <div>
-                <button id="break" onClick={e => this.breakStart(e)}>Start Break</button>
-                <button id="lunch" onClick={e => this.breakStart(e)}>Start Lunch</button>
+          {sessionStorage.getItem("shiftID") !== "-1" && sessionStorage.getItem("breakID") === "-1" &&
+          <>
+            <div className='shiftButtons'>
+              <button id="break" className="breakStart" onClick={e => this.breakStart(e)}>Start Break</button>
             </div>
-        }
-        {sessionStorage.getItem("breakID") !== "-1" && sessionStorage.getItem("breakType") === "lunch" 
-        && <button id="lunch" onClick={e => this.breakEnd(e)}>End Lunch</button>}
-        {sessionStorage.getItem("breakID") !== "-1" && sessionStorage.getItem("breakType") === "break" && 
-        <button id="lunch" onClick={e => this.breakEnd(e)}>End Break</button>}
+            <div className='shiftButtons'>
+              <button id="lunch" className="breakStart" onClick={e => this.breakStart(e)}>Start Lunch</button>
+            </div>
+          </>
+          }
+          {sessionStorage.getItem("breakID") !== "-1" && sessionStorage.getItem("breakType") === "lunch" 
+          && <div className='shiftButtons'><button id="lunch" className="breakEnd" onClick={e => this.breakEnd(e)}>End Lunch</button></div>}
+          {sessionStorage.getItem("breakID") !== "-1" && sessionStorage.getItem("breakType") === "break" && 
+          <div className='shiftButtons'>
+            <button id="break" className="breakEnd" onClick={e => this.breakEnd(e)}>End Break</button>
+          </div>
+          }
+        </div>
+        <div>
+          <Timesheet data={this.state.data}></Timesheet>
+        </div>
       </div>
     )
   }

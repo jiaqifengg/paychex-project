@@ -230,7 +230,6 @@ def get_all():
     print(emp_id)
     res = db.get_all_shift(emp_id)
     new_res = parse_res(res)
-    print(new_res)
     response_body = {
         "res": json.dumps(new_res)
     }
@@ -242,7 +241,9 @@ def parse_res(res):
     for shift in res:
         date = shift[3].strftime('%m/%d/%Y')
         start_time = shift[4].strftime('%H:%M:%S')
-        end_time = shift[5].strftime('%H:%M:%S')
+        end_time = ""
+        if(shift[5] != None):
+            end_time = shift[5].strftime('%H:%M:%S')
         total_work_time = shift[6]
         total_lunches = shift[7]
         total_breaks = shift[8]
@@ -260,7 +261,6 @@ def parse_res(res):
             "total_lunches": total_lunches,
             "total_breaks": total_breaks
         }
-        print(temp)
         new_res.append(temp)
     return new_res
         
