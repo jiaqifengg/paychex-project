@@ -187,6 +187,32 @@ def clock_out():
     response = build_response(response_body)
     return response
 
+@app.route('/break', methods=['GET', 'POST'])
+def start_break():
+    post_data = json.loads(request.data)
+    breakType = post_data['breakType']
+    shiftID = post_data['shiftID']
+    emp_id = post_data['token']
+    res = db.insert_break(breakType, emp_id)
+    response_body = {
+        "status": 200,
+        "breakType": breakType,
+        "shiftID": shiftID,
+        "emp_id": emp_id,
+        "breakID": res
+    }
+    response = build_response(response_body)
+    return response
+
+@app.route('/breakEnd', methods=['GET', 'POST'])
+def end_break():
+    post_data = json.loads(request.data)
+    breakType = post_data['breakType']
+    shiftID = post_data['shiftID']
+    emp_id = post_data['token']
+    breakID = post_data["breakID"]
+
+
 if __name__ == "__main__":
     app.debug = True
     app.run()

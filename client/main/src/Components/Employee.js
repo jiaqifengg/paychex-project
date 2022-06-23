@@ -9,10 +9,8 @@ export default class Employee extends React.Component {
     this.state = {
       shiftActive: false,
       timesheetItem: true,
-      breakActive: false
     };
     this.logoutUser = this.logoutUser.bind(this);
-    this.updateBreakActive = this.updateBreakActive.bind(this);
     this.updateShiftActive = this.updateShiftActive.bind(this);
   }
 
@@ -22,20 +20,11 @@ export default class Employee extends React.Component {
     });
   }
 
-  updateBreakActive(status){
-    this.setState({
-      breakActive: status
-    });
-  }
-
   componentDidMount(){
     console.log(sessionStorage.getItem("shiftID"));
     if(sessionStorage.getItem("shiftID") !== "-1"){
       this.updateShiftActive(true);
       console.log(this.state.shiftActive);
-    }
-    if(sessionStorage.getItem("breakID") !== "-1"){
-      this.updateBreakActive(true);
     }
   }
   
@@ -82,8 +71,7 @@ export default class Employee extends React.Component {
           </div>
         </div>
         <div id="portalContent">
-          <ShiftManagement shiftStatus={this.state.shiftActive} breakStatus={this.state.breakActive}
-          updateBreak={this.updateBreakActive} updateShift={this.updateShiftActive}></ShiftManagement>
+          <ShiftManagement shiftStatus={this.state.shiftActive} updateShift={this.updateShiftActive}></ShiftManagement>
         </div>
       </div>
     )

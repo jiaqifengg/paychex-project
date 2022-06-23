@@ -60,7 +60,64 @@ export default class ShiftOptions extends React.Component {
     }
   }
 
+  breakStart = e =>{
+    e.preventDefault()
+    let breakT = e.target.id;
+    console.log(breakT);  
+    if(this.props.shiftStatus){
+        fetch("http://localhost:5000/break", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              token: sessionStorage.getItem("token"),
+              breakType: breakT,
+              shiftID: sessionStorage.getItem("shiftID")
+            })
+        })
+        .then(response=>response.json())
+        .then(data=>{ 
+            console.log(data);
+            sessionStorage.setItem("breakID", data["breakID"]);
+            sessionStorage.setItem("breakType", data["breakType"]);
+            this.props.updateShift(true);
+        })
+    }
+  }
+
+  breakEnd = e =>{
+    e.preventDefault()
+    let breakT = e.target.id;
+    console.log(breakT);  
+    if(this.props.shiftStatus){
+        fetch("http://localhost:5000/breakEnd", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              token: sessionStorage.getItem("token"),
+              breakType: sessionStorage.getItem("breakType"),
+              breakID: sessionStorage.getItem("breakID"),
+              shiftID: sessionStorage.getItem("shiftID")
+            })
+        })
+        .then(response=>response.json())
+        .then(data=>{ 
+            console.log(data);
+            sessionStorage.setItem("breakID", data["breakID"]);
+            sessionStorage.setItem("breakType", data["breakType"]);
+            this.props.updateShift(true);
+        })
+    }
+  }
+
   render(){
+    function breaks(){
+        if(sessionStorage.getItem("breakType") === "lunch"){
+            return <button onClick={e => this.breakEnd(e)}>End Lunch</button>
+        }else if((sessionStorage.getItem("breakType") === "break")){
+            return <button onClick={e => this.breakEnd(e)}>End Break</button>
+        }
+    }
+
     return(
       <div id="shiftOptions">
         {sessionStorage.getItem("shiftID") === "-1" ?
@@ -69,16 +126,11 @@ export default class ShiftOptions extends React.Component {
         }
         {sessionStorage.getItem("shiftID") !== "-1" && sessionStorage.getItem("breakID") === "-1" &&
             <div>
-                <button onClick={e => this.clockOut(e)}>Start Break</button>
-                <button onClick={e => this.clockOut(e)}>Start Lunch</button>
+                <button id="break" onClick={e => this.breakStart(e)}>Start Break</button>
+                <button id="lunch" onClick={e => this.breakStart(e)}>Start Lunch</button>
             </div>
         }
-        {sessionStorage.getItem("breakID") !== "-1" && sessionStorage.getItem("breakType") === "lunch" &&
-            <button onClick={e => this.clockOut(e)}>End Lunch</button>
-        }
-        {sessionStorage.getItem("breakID") !== "-1" && sessionStorage.getItem("breakType") === "break" &&
-            <button onClick={e => this.clockOut(e)}>End Break</button>
-        }
+        {sessionStorage.getItem("breakID") !== "-1" && breaks()}
       </div>
     )
   }

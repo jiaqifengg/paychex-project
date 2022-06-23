@@ -53,8 +53,8 @@ class dbHelper():
                                 break_id SERIAL,
                                 employee_id CHAR(10) REFERENCES employees (emp_id),
                                 break_type TEXT,
-                                break_start TIME,
-                                break_end TIME DEFAULT NULL,
+                                break_start TIMESTAMP,
+                                break_end TIMESTAMP,
                                 break_time TEXT,
                                 PRIMARY KEY(break_id)
                             );"""
@@ -140,7 +140,6 @@ class dbHelper():
             return 200
         else:
             return res
-
     
     def total_work_time(self, shiftID, curr_time):
         res = self.get_shift(shiftID)
@@ -160,13 +159,41 @@ class dbHelper():
         vals = (shiftID,)
         res = self.__execute(query, vals)
         return res.fetchall()
-
-    def get_timesheets(self, username):
-        query = """SELECT * FROM employees WHERE username=%s"""
-        vals = (username,)
+    
+    def insert_break(self, breakType, emp_id):
+        break_start = datetime.now()
+        print("HERE")
+        print(break_start, emp_id, breakType)
+        query = """INSERT INTO breaks(
+                break_id, employee_id, break_type, break_start, break_end, break_time)
+                VALUES (DEFAULT, %s, %s, %s, NULL, NULL);"""
+        vals = (emp_id, breakType, break_start)
         cursor = self.__execute(query, vals)
         if cursor != 500:
-            return cursor.fetchall()
+            res = self.get_break_status(emp_id)[0]
+            print(res)
+            break_id = res[0]
+            return break_id
         else:
             return cursor
 
+    def count_update_breaks(self, shiftID, breakType):
+        shift_dets = self.get_shift(shiftID)[0]
+        total_breaks = int(shift_dets[8])
+        total_lunch = int(shift_dets[7])
+        if breakType == "break":
+            query = """
+                    UPDATE timesheets
+                    SET total_break_time=%s
+                    WHERE id=%s;
+                    """
+            vals = (str(total_breaks + 1), shiftID)
+        elif breakType == "lunch":
+            query = """
+                    UPDATE timesheets
+                    SET total_break_time=%s
+                    WHERE id=%s;
+                    """
+            vals = (str(total_lunch + 1), shiftID)
+        
+        
