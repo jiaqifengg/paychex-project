@@ -35,16 +35,24 @@ export default class ShiftOptions extends React.Component {
   }
 
   clockOut = e =>{
-    console.log(sessionStorage.getItem("shiftID"));
+    let currentShift = sessionStorage.getItem("shiftID");
   }
   render(){
     return(
       <div id="shiftOptions">
-        {sessionStorage.getItem("shiftID") === "-1" &&
-        <button onClick={e => this.clockIn(e)}>Clock-In</button> 
+        {sessionStorage.getItem("shiftID") === "-1" ?
+            <button onClick={e => this.clockIn(e)}>Clock-In</button> :
+            <button onClick={e => this.clockOut(e)}>Clock-Out</button>
         }
-        {sessionStorage.getItem("shiftID") !== "-1" && 
-        <button onClick={e => this.clockOut(e)}>Clock-Out</button>
+        {sessionStorage.getItem("breakID") !== "-1" && sessionStorage.getItem("breakType") === "" ?
+            <button onClick={e => this.clockOut(e)}>Start Break</button> :
+            <button onClick={e => this.clockOut(e)}>Start Lunch</button>
+        }
+        {sessionStorage.getItem("breakID") !== "-1" && sessionStorage.getItem("breakType") === "lunch" &&
+            <button onClick={e => this.clockOut(e)}>End Lunch</button>
+        }
+        {sessionStorage.getItem("breakID") !== "-1" && sessionStorage.getItem("breakType") === "break" &&
+            <button onClick={e => this.clockOut(e)}>End Break</button>
         }
       </div>
     )

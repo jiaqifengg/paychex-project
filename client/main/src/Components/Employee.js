@@ -82,7 +82,8 @@ export default class Employee extends React.Component {
           </div>
         </div>
         <div id="portalContent">
-          <ShiftManagement shiftStatus={this.state.shiftActive} breakStatus={this.state.breakActive}></ShiftManagement>
+          <ShiftManagement shiftStatus={this.state.shiftActive} breakStatus={this.state.breakActive}
+          updateBreak={this.updateBreakActive} updateShift={this.updateShiftActive}></ShiftManagement>
         </div>
       </div>
     )
