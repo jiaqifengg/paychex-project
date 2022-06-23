@@ -30,7 +30,7 @@ stated previously.
 employee’s shift activity.
 <br />&emsp;o (Optional) Allow administrators to filter the report data.
 
-## How to run:
+## How to run(MacOS):
 1. Download the repository with SSH
    ```git clone git@github.com:jiaqifengg/paychex-project.git```
    or your preferred method.
@@ -53,5 +53,6 @@ employee’s shift activity.
    ```
 
 **_Notes_**
-Due to time constraints the sideNav is not functional but it exists for status updates and future implementations.
+o&emsp;Due to time constraints the sideNav is not functional but it exists for status updates and future implementations. 
 
+o&emsp;Technical issues connecting to my postgres server on pgadmin4 on my Windows computer so all work had to be done on MacOS.
