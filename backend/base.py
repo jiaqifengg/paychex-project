@@ -1,16 +1,12 @@
-from curses import meta
-from tabnanny import check
+import json
 from time import time
 from urllib import response
 from datetime import datetime
 import bcrypt
-from flask import Flask, render_template, render_template_string, request
+from flask import Flask, request
 from database.dbHelper import dbHelper
-import json
 from flask import Flask, jsonify
-from flask_cors import CORS, cross_origin
-import random
-import os
+from flask_cors import CORS
 import uuid
 
 app = Flask(__name__)
@@ -228,14 +224,16 @@ def end_break():
 
 @app.route('/timesheet', methods=['GET', 'POST'])
 def get_all():
+    print(request.data)
     post_data = json.loads(request.data)
     emp_id = post_data['token']
+    print(emp_id)
     res = db.get_all_shift(emp_id)
     new_res = parse_res(res)
+    print(new_res)
     response_body = {
-        "res": new_res
+        "res": json.dumps(new_res)
     }
-
     response = build_response(response_body)
     return response
 
@@ -255,12 +253,12 @@ def parse_res(res):
         if total_work_time == None:
             total_work_time = ""
         temp = {
-            "Shift Date": date,
-            "Start Time": start_time,
-            "End Time": end_time,
-            "Total Hours": total_work_time,
-            "Total Lunches": total_lunches,
-            "Total Breaks": total_breaks
+            "date": date,
+            "s_time": start_time,
+            "e_time": end_time,
+            "total_hours": total_work_time,
+            "total_lunches": total_lunches,
+            "total_breaks": total_breaks
         }
         print(temp)
         new_res.append(temp)

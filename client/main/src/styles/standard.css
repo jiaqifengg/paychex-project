@@ -128,3 +128,11 @@
     align-items: center;
     width: 100%;
 }
+
+.row{
+    padding-right: 4vw;
+}
+
+#breaks-table{
+    padding-left: 3.5vw;
+}

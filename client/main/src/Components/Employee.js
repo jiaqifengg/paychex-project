@@ -2,6 +2,7 @@ import React from 'react';
 import "../styles/standard.css";
 import Logout from "../icons/logout.png";
 import ShiftManagement from "./ShiftOptions.js";
+import Timesheet from './Timesheet';
 
 export default class Employee extends React.Component {
   constructor(props){
@@ -85,6 +86,7 @@ export default class Employee extends React.Component {
         <div id="portalContent">
           <ShiftManagement shiftStatus={this.state.shiftActive} updateShift={this.updateShiftActive}
            updateBreak={this.updateBreakActive}></ShiftManagement>
+           <Timesheet></Timesheet>
         </div>
       </div>
     )
