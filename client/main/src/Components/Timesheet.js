@@ -39,7 +39,7 @@ export default class Timesheet extends React.Component {
             <th className='row'>Total Breaks</th>
           </tr>
           <tbody>
-            {this.state.data.map((val, key) => {
+            {this.state.data.reverse().map((val, key) => {
               return(
                 <tr key={key}>
                   <td className='row'>{val.date}</td>
