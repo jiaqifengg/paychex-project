@@ -1,6 +1,8 @@
 from curses import meta
 from tabnanny import check
+from time import time
 from urllib import response
+from datetime import datetime
 import bcrypt
 from flask import Flask, render_template, render_template_string, request
 from database.dbHelper import dbHelper
@@ -14,9 +16,7 @@ import uuid
 app = Flask(__name__)
 CORS(app)
 db = dbHelper()
-invalid_response = {
-            "status": 500,
-        }
+invalid_response = {"status": 500}
 
 def generateUUID():
     return uuid.uuid4().hex[:10]
@@ -127,15 +127,51 @@ def check_password(input_password, hashed_password):
     # Check hashed password. Using bcrypt, the salt is saved into the hash itself
     return bcrypt.checkpw(input_password.encode(), hashed_password.encode())
 
+#checks if employee is working
+@app.route('/status', methods=['POST','GET'])
+def get_active():
+    # TIMESHEET: employee_id, active, in_date, clock_in_time, clock_out_time, total_work_time, total_lunch_time, total_break_time
+    # BREAKS: break_id, employee_id, break_type, break_start, break_end, break_time
+    post_data = json.loads(request.data)
+    print(post_data)
+    token = post_data['token'] #emp_id is passed
+    res = db.get_current_status(token)
+    print(res)
+    if len(res)!=0:   
+        # if employee is working also check if they are on a break
+        break_res = db.get_break_status(token)
+        break_active = -1 
+        break_type = ""
+        print(break_res)
+        if len(break_res) == 1:
+            break_active = break_res[0][0]
+            break_type = break_res[0][2]
+        response_body = {
+            "shiftID": res[0][0],
+            "breakID": break_active,
+            "breakType": break_type
+        }
+        response = build_response(response_body)
+        return response
+    elif res == 500 or len(res)==0:
+        response_body = {
+            "shiftID": -1,
+            "breakID": -1
+        }
+        response = build_response(response_body)
+        return response
+
 @app.route('/in', methods=['POST', 'GET'])
 def clock_in():
     post_data = json.loads(request.data)
-    username = post_data['username']
-    
-@app.route('/status', methods=['POST','GET'])
-def get_active():
-    post_data = json.loads(request.data)
-    token = post_data['token'] #emp_id is passed
+    emp_id = post_data['token']
+    res = db.clockIn(emp_id)
+    print(res)
+    response_body = {
+        "shiftID": res,
+    }
+    response = build_response(response_body)
+    return response
 
 if __name__ == "__main__":
     app.debug = True

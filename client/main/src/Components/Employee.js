@@ -8,18 +8,35 @@ export default class Employee extends React.Component {
     super(props);
     this.state = {
       shiftActive: false,
-      timesheet: true
+      timesheetItem: true,
+      breakActive: false
     };
     this.logoutUser = this.logoutUser.bind(this);
+    this.updateBreakActive = this.updateBreakActive.bind(this);
+    this.updateShiftActive = this.updateShiftActive.bind(this);
   }
 
-  updateShiftActive(){
+  updateShiftActive(status){
     this.setState({
-      shiftActive: true
-    })
+      shiftActive: status
+    });
+  }
+
+  updateBreakActive(status){
+    this.setState({
+      breakActive: status
+    });
   }
 
   componentDidMount(){
+    console.log(sessionStorage.getItem("shiftID"));
+    if(sessionStorage.getItem("shiftID") !== "-1"){
+      this.updateShiftActive(true);
+      console.log(this.state.shiftActive);
+    }
+    if(sessionStorage.getItem("breakID") !== "-1"){
+      this.updateBreakActive(true);
+    }
   }
   
   logoutUser = e =>{
@@ -33,7 +50,7 @@ export default class Employee extends React.Component {
 
   render(){
     const styles = {
-      display: this.state.timesheet ? {border: '1px solid white'} : {border: '1px solid transparent'},
+      display: this.state.timesheetItem ? {border: '1px solid white'} : {border: '1px solid transparent'},
       shift: this.state.shiftActive ? {color: 'green'} : {color: 'white'},
     }
 
@@ -65,7 +82,7 @@ export default class Employee extends React.Component {
           </div>
         </div>
         <div id="portalContent">
-          <ShiftManagement activeStatus={this.state.shiftActive}></ShiftManagement>
+          <ShiftManagement shiftStatus={this.state.shiftActive} breakStatus={this.state.breakActive}></ShiftManagement>
         </div>
       </div>
     )

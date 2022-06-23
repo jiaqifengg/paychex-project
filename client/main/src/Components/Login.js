@@ -57,7 +57,25 @@ export default class Login extends React.Component {
           sessionStorage.setItem("lastName", l_name);
           sessionStorage.setItem("username", username);
           sessionStorage.setItem("admin", emp_type);  
-          document.location = "/";
+
+          fetch("http://localhost:5000/status", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              token: sessionStorage.getItem("token")
+            })
+          })
+          .then(response=>response.json())
+          .then(data=>{
+            console.log(data);
+            let breakID = data["breakID"];
+            let shiftID = data["shiftID"];
+            let breakType = data["breakType"];
+            sessionStorage.setItem("shiftID", shiftID);
+            sessionStorage.setItem("breakID", breakID);
+            sessionStorage.setItem("breakType", breakType);
+            document.location = "/";
+          })
 
         }else{
           this.setState({

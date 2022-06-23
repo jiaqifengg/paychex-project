@@ -1,4 +1,5 @@
 from re import U
+from datetime import date, datetime
 import psycopg2
 import hashlib
 from dotenv import load_dotenv
@@ -90,15 +91,44 @@ class dbHelper():
             return cursor
     
     def get_current_status(self, emp_id):
-        query = "SELECT * FROM timesheets WHERE emp_id=%s AND clock_out_time is NULL"
+        query = "SELECT * FROM timesheets WHERE employee_id=%s AND clock_out_time is NULL"
+        vals = (emp_id,)
+        cursor = self.__execute(query, vals)
+        if cursor != 500:
+            return cursor.fetchall()
+        else:
+            return cursor
+
+    def get_break_status(self, emp_id):
+        # break_id, employee_id, break_type, break_start, break_end, break_time
+        query = """SELECT * FROM breaks WHERE employee_id=%s AND break_end is NULL"""
+        vals = (emp_id,)
+        cursor = self.__execute(query, vals)
+        if cursor != 500:
+            return cursor.fetchall()
+        else:
+            return cursor
 
     def clockIn(self, emp_id):
-        query = "INSERT INTO timesheets"
-
+        query = """INSERT INTO timesheets(id, employee_id, active, in_date, clock_in_time, clock_out_time, total_work_time, total_lunch_time, total_break_time)
+	    VALUES (DEFAULT, %s, 1, %s, %s, NULL, NULL, NULL, NULL);"""
+        today = date.today()
+        in_date = today.strftime("%m-%d-%Y")
+        now = datetime.now()
+        clock_in_time = now.strftime("%I:%M:%S %p")
+        vals = (emp_id, in_date, clock_in_time)
+        cursor = self.__execute(query, vals)
+        if cursor != 500:
+            res = self.get_current_status(emp_id)[0]
+            res_id = res[0]
+            return res_id
+        else:
+            return cursor
+        
     def clockOut(self, emp_id):
         query = """
         UPDATE timesheets
-        SET active=0, clock_out_time=?, total_work_time=?, total_lunch_time=?, total_break_time=?
+        SET active=0, clock_out_time=%s, total_work_time=%s, total_lunch_time=%s, total_break_time=%s
         WHERE emp_id=%s;
         """
         
