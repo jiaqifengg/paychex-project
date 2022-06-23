@@ -173,6 +173,20 @@ def clock_in():
     response = build_response(response_body)
     return response
 
+@app.route('/out', methods=['GET', 'POST'])
+def clock_out():
+    post_data = json.loads(request.data)
+    emp_id = post_data['token']
+    shiftID = post_data['shiftID']
+    res = db.clockOut(emp_id, shiftID)
+    print(res)
+    response_body = {
+        "status": res
+    }
+
+    response = build_response(response_body)
+    return response
+
 if __name__ == "__main__":
     app.debug = True
     app.run()

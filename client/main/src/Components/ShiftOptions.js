@@ -16,7 +16,7 @@ export default class ShiftOptions extends React.Component {
   clockIn = e =>{
     e.preventDefault();
     // if there is no shift active
-    if(this.props.shiftActive !== "-1"){
+    if(this.props.shiftStatus !== "-1"){
         fetch("http://localhost:5000/in", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -27,16 +27,37 @@ export default class ShiftOptions extends React.Component {
         .then(response=>response.json())
         .then(data=>{ 
             console.log(data);
-            console.log(sessionStorage.getItem("shiftID"));
             sessionStorage.setItem("shiftID", data["shiftID"]);
-            console.log(sessionStorage.getItem("shiftID"));
+            this.props.updateShift(true);
         })
     }
   }
 
   clockOut = e =>{
+    e.preventDefault();
     let currentShift = sessionStorage.getItem("shiftID");
+    console.log(currentShift);
+    console.log(this.props.shiftStatus);
+    // if there is no shift active
+    if(this.props.shiftStatus){
+        console.log("clocking out...");
+        fetch("http://localhost:5000/out", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              token: sessionStorage.getItem("token"),
+              shiftID: currentShift
+            })
+        })
+        .then(response=>response.json())
+        .then(data=>{ 
+            console.log(data);
+            sessionStorage.setItem("shiftID", "-1");
+            this.props.updateShift(false);
+        })
+    }
   }
+
   render(){
     return(
       <div id="shiftOptions">

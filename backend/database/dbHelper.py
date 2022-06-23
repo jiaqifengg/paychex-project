@@ -1,5 +1,7 @@
 from re import U
-from datetime import date, datetime
+import time
+from datetime import date, datetime, time
+from time import time
 import psycopg2
 import hashlib
 from dotenv import load_dotenv
@@ -36,9 +38,9 @@ class dbHelper():
                                     id SERIAL,
                                     employee_id CHAR(10) REFERENCES employees (emp_id),
                                     active INT DEFAULT 0,
-                                    in_date DATE NOT NULL,
-                                    clock_in_time TIME,
-                                    clock_out_time TIME,
+                                    in_date DATE,
+                                    clock_in_time TIMESTAMP,
+                                    clock_out_time TIMESTAMP,
                                     total_work_time TEXT,
                                     total_lunch_time TEXT,
                                     total_break_time TEXT,
@@ -114,8 +116,7 @@ class dbHelper():
 	    VALUES (DEFAULT, %s, 1, %s, %s, NULL, NULL, NULL, NULL);"""
         today = date.today()
         in_date = today.strftime("%m-%d-%Y")
-        now = datetime.now()
-        clock_in_time = now.strftime("%I:%M:%S %p")
+        clock_in_time = datetime.now()
         vals = (emp_id, in_date, clock_in_time)
         cursor = self.__execute(query, vals)
         if cursor != 500:
@@ -125,13 +126,41 @@ class dbHelper():
         else:
             return cursor
         
-    def clockOut(self, emp_id):
+    def clockOut(self, emp_id, shiftID):
+        clock_out_time = datetime.now()
+        res = self.total_work_time(shiftID, clock_out_time)
         query = """
         UPDATE timesheets
         SET active=0, clock_out_time=%s, total_work_time=%s, total_lunch_time=%s, total_break_time=%s
-        WHERE emp_id=%s;
+        WHERE id=%s;
         """
-        
+        vals=(clock_out_time, res, 0, 0, shiftID)
+        res = self.__execute(query, vals)
+        if res != 500:
+            return 200
+        else:
+            return res
+
+    
+    def total_work_time(self, shiftID, curr_time):
+        res = self.get_shift(shiftID)
+        start_time = res[0][4]
+        time_diff = curr_time - start_time
+        return time_diff
+
+    def convert_timedelta(self, duration):
+        days, seconds = duration.days, duration.seconds
+        hours = days * 24 + seconds // 3600
+        minutes = (seconds % 3600) // 60
+        seconds = (seconds % 60)
+        return hours, minutes, seconds
+
+    def get_shift(self, shiftID):
+        query = "SELECT * FROM timesheets WHERE id=%s"
+        vals = (shiftID,)
+        res = self.__execute(query, vals)
+        return res.fetchall()
+
     def get_timesheets(self, username):
         query = """SELECT * FROM employees WHERE username=%s"""
         vals = (username,)
