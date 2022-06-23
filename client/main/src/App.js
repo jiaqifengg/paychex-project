@@ -6,11 +6,12 @@ import Register from "./Components/Register.js";
 import Landing from "./Components/Landing.js";
 import Employee from './Components/Employee.js';
 import Admin from './Components/Admin.js';
+//import Timesheet from './Components/Timesheet';
 import {
   BrowserRouter as Router, Route, Routes
 } from 'react-router-dom';
 
-
+console.log(React.version);
 class App extends React.Component {
   constructor(props){
     super(props);
@@ -42,20 +43,21 @@ class App extends React.Component {
             <Route path="/register" element={<SignUp/>} />
             <Route path="/login" element={<SignIn login={this.state.login}/>} />
             <Route path="/" element={<Home login={this.state.login}/>} />
-            <Route path="/employee" element={<EmpTest></EmpTest>}/>
+            {/* <Route path="/test" element={<EmpTest></EmpTest>}/> */}
           </Routes>
         </Router>
       </div>
     )
   }
 }
-const EmpTest = (props) =>{
-  return(
-    <div>
-      <Employee></Employee>
-    </div>
-  )
-}
+
+// const EmpTest = (props) =>{
+//   return(
+//     <div>
+//       <Timesheet></Timesheet>
+//     </div>
+//   )
+// }
 
 const SignIn = (props) =>{
   return(

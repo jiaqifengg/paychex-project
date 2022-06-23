@@ -160,6 +160,7 @@ class dbHelper():
         query = "SELECT * FROM timesheets WHERE id=%s"
         vals = (shiftID,)
         res = self.__execute(query, vals)
+        print(res)
         return res.fetchall()
     
     def get_break(self, breakID):
@@ -238,4 +239,8 @@ class dbHelper():
         else:
             return res
         
-        
+    def get_all_shift(self, emp_id):
+        query = "SELECT * FROM timesheets WHERE employee_id=%s"
+        vals = (emp_id,)
+        res = self.__execute(query, vals)
+        return res.fetchall()

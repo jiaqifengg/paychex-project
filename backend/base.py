@@ -226,7 +226,46 @@ def end_break():
     response = build_response(response_body)
     return response
 
+@app.route('/timesheet', methods=['GET', 'POST'])
+def get_all():
+    post_data = json.loads(request.data)
+    emp_id = post_data['token']
+    res = db.get_all_shift(emp_id)
+    new_res = parse_res(res)
+    response_body = {
+        "res": new_res
+    }
 
+    response = build_response(response_body)
+    return response
+
+def parse_res(res):
+    new_res = []
+    for shift in res:
+        date = shift[3].strftime('%m/%d/%Y')
+        start_time = shift[4].strftime('%H:%M:%S')
+        end_time = shift[5].strftime('%H:%M:%S')
+        total_work_time = shift[6]
+        total_lunches = shift[7]
+        total_breaks = shift[8]
+        if total_breaks == None: 
+            total_breaks = 0
+        if total_lunches == None:
+            total_lunches = 0
+        if total_work_time == None:
+            total_work_time = ""
+        temp = {
+            "Shift Date": date,
+            "Start Time": start_time,
+            "End Time": end_time,
+            "Total Hours": total_work_time,
+            "Total Lunches": total_lunches,
+            "Total Breaks": total_breaks
+        }
+        print(temp)
+        new_res.append(temp)
+    return new_res
+        
 if __name__ == "__main__":
     app.debug = True
     app.run()
